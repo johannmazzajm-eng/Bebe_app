@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="bébé.">
+<title>bébé.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --cream:#FDF8F3;--brown:#2C1810;--bl:#8B7355;--brd:#E8D5C0;
+  --acc:#E8836A;--accl:#FAECE7;--teal:#5DCAA5;--tl:#E1F5EE;
+  --rl:#FCEBEB;--red:#E24B4A;--amb:#EF9F27;--aml:#FAEEDA;
+  --ppl:#EEEDFE;--ppc:#534AB7;
+}
+html,body{height:100%;background:#F0EAE0;font-family:'DM Sans',sans-serif;overflow:hidden}
+.shell{
+  max-width:430px;margin:0 auto;
+  height:100vh;height:100dvh;
+  background:var(--cream);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  position:relative;
+}
+@media(min-width:430px){
+  .shell{border-radius:40px;margin:20px auto;height:calc(100vh - 40px);height:calc(100dvh - 40px);box-shadow:0 20px 60px rgba(0,0,0,0.15);}
+}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden}
+.screen.active{display:flex}
+.sbar{padding:env(safe-area-inset-top,14px) 24px 4px;padding-top:max(env(safe-area-inset-top),14px);display:flex;justify-content:space-between;font-size:12px;color:var(--bl);font-weight:500;background:var(--cream)}
+.hdr{padding:8px 24px 12px;display:flex;align-items:center;justify-content:space-between;background:var(--cream)}
+.logo{font-family:'Fraunces',serif;font-size:24px;color:var(--brown);letter-spacing:-0.5px}
+.logo em{color:var(--acc);font-style:normal}
+
+.bp{background:var(--brown);color:var(--cream);border:none;border-radius:24px;padding:14px 32px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;transition:transform .12s;touch-action:manipulation}
+.bp:active{transform:scale(0.98)}
+.bs{background:white;color:var(--brown);border:1.5px solid var(--brd);border-radius:24px;padding:13px 32px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;transition:transform .12s;touch-action:manipulation}
+.bs:active{transform:scale(0.98)}
+.bo{background:transparent;color:var(--brown);border:1px solid var(--brd);border-radius:20px;padding:8px 16px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;touch-action:manipulation}
+.bo.active{background:var(--brown);color:var(--cream);border-color:var(--brown)}
+.chip{border:1px solid var(--brd);border-radius:20px;padding:8px 16px;font-size:12px;color:#5C4830;background:white;white-space:nowrap;cursor:pointer;transition:all .12s;font-family:'DM Sans',sans-serif;font-weight:500;touch-action:manipulation}
+.chip.active{background:var(--brown);color:var(--cream);border-color:var(--brown)}
+.inp{width:100%;padding:13px 16px;border-radius:14px;border:1.5px solid var(--brd);font-size:16px;background:var(--cream);color:var(--brown);font-family:'DM Sans',sans-serif;outline:none;-webkit-appearance:none}
+.inp:focus{border-color:var(--acc)}
+
+/* CARDS */
+.ncw{position:relative;width:100%;height:100%}
+.nc{position:absolute;width:100%;height:100%;background:white;border-radius:28px;border:0.5px solid var(--brd);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;user-select:none;touch-action:none}
+.nc.c2{transform:rotate(2deg) translateY(8px) scale(0.97);z-index:1;background:#FFF5EC}
+.nc.c3{transform:rotate(-1.5deg) translateY(16px) scale(0.94);z-index:0;background:#FAEEDA}
+.nc.main{z-index:2;cursor:grab}
+.nc.gl{transform:translateX(-150%) rotate(-20deg)!important;transition:transform .35s ease,opacity .35s!important;opacity:0}
+.nc.gr{transform:translateX(150%) rotate(20deg)!important;transition:transform .35s ease,opacity .35s!important;opacity:0}
+.nc.gm{transform:translateY(-120%)!important;transition:transform .35s ease,opacity .35s!important;opacity:0}
+.stmp{position:absolute;border-radius:8px;padding:5px 14px;font-size:20px;font-weight:700;opacity:0;transition:opacity .1s;pointer-events:none;letter-spacing:1px}
+.soui{top:36px;left:24px;border:3px solid var(--teal);color:var(--teal);transform:rotate(-15deg)}
+.snon{top:36px;right:24px;border:3px solid var(--red);color:var(--red);transform:rotate(15deg)}
+.smb{top:36px;left:50%;transform:translateX(-50%) rotate(-5deg);border:3px solid var(--amb);color:var(--amb);font-size:13px;white-space:nowrap}
+.olbl{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#B8956A;font-weight:500;margin-bottom:10px;text-align:center}
+.nbig{font-family:'Fraunces',serif;font-size:52px;color:var(--brown);letter-spacing:-1px;line-height:1;margin-bottom:8px;text-align:center}
+.nmng{font-size:13px;color:var(--bl);text-align:center;line-height:1.5;max-width:230px;margin-bottom:14px}
+.ntags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:10px}
+.tag{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:500}
+.tf{background:var(--ppl);color:var(--ppc)}
+.tm{background:var(--tl);color:#0F6E56}
+.tc{background:#F1EFE8;color:#444441}
+.tp{background:var(--aml);color:#633806}
+.phint{background:var(--accl);border-radius:10px;padding:6px 12px;font-size:11px;color:#712B13;text-align:center;max-width:240px}
+
+/* PARTNER BAR */
+.ptnr{margin:0 14px 10px;background:white;border-radius:16px;border:0.5px solid var(--brd);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;border:2px solid white;flex-shrink:0}
+.avy{background:var(--ppl);color:var(--ppc)}
+.avp{background:var(--accl);color:#993C1D}
+.mpill{background:var(--brown);color:var(--cream);border-radius:12px;padding:4px 10px;font-size:12px;font-weight:500;white-space:nowrap}
+.dlive{width:6px;height:6px;background:var(--teal);border-radius:50%;display:inline-block;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* FILTERS */
+.frow{padding:0 14px 8px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;-webkit-overflow-scrolling:touch}
+.frow::-webkit-scrollbar{display:none}
+
+/* PROGRESS */
+.pbar2{margin:0 14px 4px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.pb{flex:1;height:3px;background:var(--brd);border-radius:2px}
+.pf{height:100%;background:var(--acc);border-radius:2px;transition:width .3s}
+
+/* CARD AREA */
+.card-area{flex:1;padding:0 14px;display:flex;align-items:center;justify-content:center;min-height:0}
+
+/* ACTIONS */
+.acts{padding:12px 24px;display:flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0}
+.ab{border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .12s;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+.ab:active{transform:scale(0.92)}
+.anope{width:62px;height:62px;background:var(--rl);border:1.5px solid #F7C1C1;font-size:24px;color:var(--red)}
+.amb2{width:52px;height:52px;background:var(--aml);border:1.5px solid #FAC775;font-size:20px;color:#633806}
+.alik{width:62px;height:62px;background:var(--tl);border:1.5px solid #9FE1CB;font-size:22px;color:#0F6E56}
+.aund{width:46px;height:46px;background:white;border:1.5px solid var(--brd);font-size:18px;color:var(--bl)}
+
+/* NAV BAR */
+.nbar{background:white;border-top:0.5px solid var(--brd);padding:10px 0;padding-bottom:max(env(safe-area-inset-bottom),10px);display:flex;justify-content:space-around;flex-shrink:0}
+.nb{background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--bl);font-family:'DM Sans',sans-serif;font-weight:500;padding:4px 16px;border-radius:12px;touch-action:manipulation}
+.nb.active{color:var(--acc)}
+.ni{font-size:20px;line-height:1}
+
+/* MATCH ANIMATION */
+.movo{background:rgba(44,24,16,.93);border-radius:0;padding:40px 28px 40px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;flex:1;gap:10px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+@media(min-width:430px){.movo{border-radius:40px}}
+.mttl{font-family:'Fraunces',serif;font-size:34px;color:var(--cream);letter-spacing:-1px;text-align:center}
+.mttl em{color:var(--acc);font-style:italic}
+.mnbig{font-family:'Fraunces',serif;font-size:52px;color:white;letter-spacing:-2px;text-align:center;line-height:1}
+.msub{font-size:13px;color:#D4C4B0;text-align:center}
+.hcard{background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.16);border-radius:16px;padding:14px 18px;width:100%;max-width:300px}
+.hcard-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#D4C4B0;font-weight:500;margin-bottom:10px;text-align:center}
+.hcard-score-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.hcard-name{font-family:'Fraunces',serif;font-size:18px;color:white;line-height:1;margin-bottom:3px}
+.hcard-verdict{font-size:12px;color:#D4C4B0}
+.hcard-criteria{display:flex;flex-direction:column;gap:5px}
+.hc-row{display:flex;align-items:center;gap:6px}
+.hc-label{font-size:11px;color:#B8A898;width:96px;flex-shrink:0}
+.hc-bar{flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px}
+.hc-fill{height:100%;border-radius:2px}
+.hc-val{font-size:11px;color:#D4C4B0;width:28px;text-align:right;flex-shrink:0}
+.mcontinue{background:var(--acc);color:white;border:none;border-radius:24px;padding:13px 32px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;touch-action:manipulation}
+
+/* LIST SCREENS */
+.lsc{flex:1;overflow-y:auto;padding:0 14px 16px;display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
+.es{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:32px;text-align:center}
+.sec{font-family:'Fraunces',serif;font-size:20px;color:var(--brown);padding:0 16px 8px;flex-shrink:0}
+.mitem{background:white;border-radius:16px;border:0.5px solid var(--brd);overflow:hidden}
+.mitem-top{padding:14px 16px;display:flex;align-items:center;gap:12px}
+.mitem-name{font-family:'Fraunces',serif;font-size:22px;color:var(--brown);flex:1}
+.mitem-meta{font-size:12px;color:var(--bl)}
+.mheart{color:var(--acc);font-size:18px}
+.mitem-harmony{padding:10px 14px 14px;border-top:0.5px solid var(--brd);background:var(--cream)}
+.mh-title{font-size:11px;font-weight:500;color:var(--bl);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.mh-score-badge{border-radius:20px;padding:3px 10px;font-size:11px;font-weight:500}
+.mh-rows{display:flex;flex-direction:column;gap:5px}
+.mh-row{display:flex;align-items:center;gap:8px}
+.mh-rlabel{font-size:11px;color:var(--bl);width:110px;flex-shrink:0}
+.mh-rbar{flex:1;height:3px;background:var(--brd);border-radius:2px}
+.mh-rfill{height:100%;border-radius:2px}
+.mh-rval{font-size:11px;font-weight:500;width:30px;text-align:right;flex-shrink:0}
+.maybe-item{background:white;border-radius:16px;border:0.5px solid var(--brd);padding:12px 16px;display:flex;align-items:center;gap:10px}
+.mnb{width:34px;height:34px;border-radius:50%;border:1px solid var(--brd);background:white;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.mnb.lk{background:var(--tl);border-color:#9FE1CB;color:#0F6E56}
+.mnb.np{background:var(--rl);border-color:#F7C1C1;color:var(--red)}
+
+/* SETTINGS */
+.strow{background:white;border-radius:16px;border:0.5px solid var(--brd);overflow:hidden;margin-bottom:16px}
+.sti{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--brd);gap:12px}
+.sti:last-child{border-bottom:none}
+.tgl{width:44px;height:24px;border-radius:12px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;touch-action:manipulation}
+.tgl.on{background:var(--teal)}
+.tgl.off{background:#D3D1C7}
+.tgl::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:white;top:3px;transition:left .2s}
+.tgl.on::after{left:23px}
+.tgl.off::after{left:3px}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 16px}
+.ccard{background:white;border-radius:14px;border:1.5px solid var(--brd);padding:12px 14px;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:10px;touch-action:manipulation}
+.ccard.active{border-color:var(--acc);background:var(--accl)}
+
+/* REFUSED CHIPS */
+.refused-section{padding:0 16px 12px;flex-shrink:0}
+.refused-chips{display:flex;flex-wrap:wrap;gap:6px}
+.rchip{background:var(--rl);border:0.5px solid #F7C1C1;border-radius:20px;padding:5px 10px;font-size:12px;color:#A32D2D;display:flex;align-items:center;gap:5px}
+
+/* SCROLL CONTENT */
+.scroll-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:8px}
+
+/* WELCOME */
+.stat-row{padding:16px 28px 24px;display:flex;gap:20px;justify-content:center;flex-shrink:0}
+.stat-item{text-align:center}
+.stat-num{font-family:'Fraunces',serif;font-size:20px;color:#2C1810}
+.stat-label{font-size:11px;color:#8B7355}
+
+/* SCORE RING in match */
+.ring-wrap{position:relative;width:56px;height:56px;flex-shrink:0}
+.ring-wrap svg{position:absolute;top:0;left:0}
+.ring-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;color:white}
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+
+<!-- WELCOME -->
+<div class="screen active" id="sc-welcome">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px 24px;gap:0;overflow-y:auto">
+    <div style="font-family:'Fraunces',serif;font-size:56px;color:#2C1810;letter-spacing:-2px;margin-bottom:6px">bébé<em style="color:#E8836A;font-style:italic">.</em></div>
+    <div style="font-size:14px;color:#8B7355;text-align:center;line-height:1.6;margin-bottom:28px;max-width:260px">Trouvez ensemble le prénom parfait pour votre futur enfant</div>
+    <div style="background:var(--accl);border-radius:16px;padding:14px 16px;margin-bottom:20px;width:100%">
+      <div style="font-size:12px;font-weight:500;color:#712B13;margin-bottom:4px">✦ 3 fonctionnalités uniques</div>
+      <div style="font-size:12px;color:#993C1D;line-height:1.7">
+        Swipe simultané en couple<br>
+        Filtrage phonétique intelligent<br>
+        Score d'harmonie avec votre nom
+      </div>
+    </div>
+    <div style="width:100%;display:flex;flex-direction:column;gap:10px">
+      <button class="bp" onclick="goTo('sc-create')">Créer une session</button>
+      <button class="bs" onclick="quickDemo()">Démo rapide</button>
+    </div>
+  </div>
+  <div class="stat-row">
+    <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">prénoms</div></div>
+    <div class="stat-item"><div class="stat-num">6</div><div class="stat-label">pays</div></div>
+    <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">critères phonétiques</div></div>
+  </div>
+</div>
+
+<!-- CREATE SESSION -->
+<div class="screen" id="sc-create">
+  <div class="sbar"><span>9:41</span></div>
+  <div class="hdr">
+    <button onclick="goTo('sc-welcome')" style="background:none;border:none;font-size:22px;cursor:pointer;color:#8B7355;padding:4px">←</button>
+    <div class="logo">bébé<em>.</em></div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="scroll-content" style="padding:0 24px">
+    <div style="font-family:'Fraunces',serif;font-size:26px;color:#2C1810;line-height:1.2;margin-bottom:20px">Créer votre session</div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:#8B7355;margin-bottom:6px;font-weight:500">Ton prénom</div>
+      <input class="inp" id="in-n1" placeholder="Marc" value="Marc">
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:#8B7355;margin-bottom:6px;font-weight:500">Prénom de ta partenaire</div>
+      <input class="inp" id="in-n2" placeholder="Sophie" value="Sophie">
+    </div>
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:#8B7355;margin-bottom:4px;font-weight:500">Nom de famille</div>
+      <div style="font-size:11px;color:#B8956A;margin-bottom:6px">Pour l'analyse d'harmonie phonétique à chaque match</div>
+      <input class="inp" id="in-nom" placeholder="Ex: Dupont">
+    </div>
+    <div style="margin-bottom:24px">
+      <div style="font-size:12px;color:#8B7355;margin-bottom:10px;font-weight:500">Genre des prénoms</div>
+      <div style="display:flex;gap:8px">
+        <button class="bo active" id="gb" onclick="setG('both')">Tous</button>
+        <button class="bo" id="gg" onclick="setG('girl')">Fille ♀</button>
+        <button class="bo" id="gbo" onclick="setG('boy')">Garçon ♂</button>
+      </div>
+    </div>
+    <button class="bp" onclick="startSession()">Créer la session</button>
+    <div style="height:24px"></div>
+  </div>
+</div>
+
+<!-- SWIPE -->
+<div class="screen" id="sc-swipe">
+  <div class="sbar" style="padding-bottom:2px">
+    <span id="sb-time">9:41</span>
+    <span id="sb-s" style="font-size:11px">Session #2847</span>
+  </div>
+  <div class="hdr" style="padding-bottom:8px">
+    <div class="logo">bébé<em>.</em></div>
+    <div style="display:flex;align-items:center;gap:6px;background:#2C1810;border-radius:20px;padding:6px 14px">
+      <div class="dlive"></div>
+      <span style="font-size:12px;color:#FDF8F3;font-weight:500" id="hdr-p">Sophie</span>
+    </div>
+  </div>
+  <div class="ptnr">
+    <div style="display:flex">
+      <div class="av avy" id="av-you">M</div>
+      <div class="av avp" id="av-par" style="margin-left:-8px">S</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:500;color:var(--brown);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="p-nb">Sophie est connectée</div>
+      <div style="font-size:11px;color:var(--bl)" id="p-sb">A swipé 8 prénoms</div>
+    </div>
+    <div class="mpill" id="mpill">0 match</div>
+  </div>
+  <div class="frow">
+    <div class="chip active" onclick="setChip(this,'all')">Tous</div>
+    <div class="chip" onclick="setChip(this,'fr')">Français</div>
+    <div class="chip" onclick="setChip(this,'it')">Italien</div>
+    <div class="chip" onclick="setChip(this,'no')">Nordique</div>
+    <div class="chip" onclick="setChip(this,'jp')">Japonais</div>
+    <div class="chip" onclick="setChip(this,'es')">Espagnol</div>
+  </div>
+  <div class="pbar2">
+    <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
+    <span style="font-size:11px;color:var(--bl)" id="plb">1/0</span>
+    <span style="font-size:11px;color:var(--acc)" id="sklb"></span>
+  </div>
+  <div class="card-area">
+    <div class="ncw" id="cw">
+      <div class="nc c3" id="c3"></div>
+      <div class="nc c2" id="c2"></div>
+      <div class="nc main" id="c1">
+        <div class="stmp soui" id="soui">OUI</div>
+        <div class="stmp snon" id="snon">NON</div>
+        <div class="stmp smb" id="smb">PEUT-ETRE</div>
+        <div class="olbl" id="colbl"></div>
+        <div class="nbig" id="cnam"></div>
+        <div class="nmng" id="cmng"></div>
+        <div class="ntags" id="ctags"></div>
+        <div class="phint" id="cph" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+  <div class="acts">
+    <button class="ab aund" onclick="doUndo()">↩</button>
+    <button class="ab anope" onclick="doSwipe('nope')">✕</button>
+    <button class="ab amb2" onclick="doSwipe('maybe')">~</button>
+    <button class="ab alik" onclick="doSwipe('like')">♥</button>
+  </div>
+  <div class="nbar">
+    <button class="nb active" id="nv0" onclick="navTo('sc-swipe',0)"><div class="ni">♠</div>Swipe</button>
+    <button class="nb" id="nv1" onclick="navTo('sc-matches',1)"><div class="ni">♥</div>Matchs</button>
+    <button class="nb" id="nv2" onclick="navTo('sc-maybe',2)"><div class="ni">~</div>Peut-être</button>
+    <button class="nb" id="nv3" onclick="navTo('sc-settings',3)"><div class="ni">⚙</div>Filtres</button>
+  </div>
+</div>
+
+<!-- MATCH ANIMATION -->
+<div class="screen" id="sc-match">
+  <div class="movo">
+    <div style="font-size:32px;margin-top:8px">♥</div>
+    <div class="mttl">C'est un <em>match !</em></div>
+    <div class="mnbig" id="man">—</div>
+    <div class="msub">Vous aimez tous les deux ce prénom</div>
+    <div style="display:flex;gap:16px;margin:6px 0 10px">
+      <div style="text-align:center"><div class="av avy" id="mav1" style="width:44px;height:44px;font-size:15px;margin:0 auto 4px">M</div><div style="font-size:12px;color:#D4C4B0" id="mn1">Marc</div></div>
+      <div style="font-size:26px;color:#E8836A;line-height:1;padding-top:8px">♥</div>
+      <div style="text-align:center"><div class="av avp" id="mav2" style="width:44px;height:44px;font-size:15px;margin:0 auto 4px">S</div><div style="font-size:12px;color:#D4C4B0" id="mn2">Sophie</div></div>
+    </div>
+    <div class="hcard" id="match-hcard" style="display:none">
+      <div class="hcard-title" id="mhc-title">Harmonie avec votre nom</div>
+      <div class="hcard-score-row">
+        <div class="ring-wrap">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="5"/>
+            <circle cx="28" cy="28" r="22" fill="none" stroke="#5DCAA5" stroke-width="5"
+              stroke-linecap="round" id="harc"
+              stroke-dasharray="138" stroke-dashoffset="138"
+              transform="rotate(-90 28 28)"/>
+          </svg>
+          <div class="ring-center" id="hscore-num">—</div>
+        </div>
+        <div style="flex:1">
+          <div class="hcard-name" id="hfullname">—</div>
+          <div class="hcard-verdict" id="hverdict">—</div>
+        </div>
+      </div>
+      <div class="hcard-criteria" id="hcrit"></div>
+    </div>
+    <button class="mcontinue" onclick="goTo('sc-swipe')">Continuer à swiper</button>
+    <div style="height:env(safe-area-inset-bottom,0px)"></div>
+  </div>
+</div>
+
+<!-- MATCHES LIST -->
+<div class="screen" id="sc-matches">
+  <div class="sbar"><span>9:41</span></div>
+  <div class="hdr"><div style="width:36px"></div><div class="logo">bébé<em>.</em></div><div style="width:36px"></div></div>
+  <div class="sec" id="mtitle">Vos matchs</div>
+  <div id="nom-reminder" style="display:none;margin:0 14px 10px;background:var(--accl);border-radius:12px;padding:10px 14px;font-size:12px;color:#712B13;flex-shrink:0">
+    Ajoutez votre nom de famille dans Filtres ⚙ pour voir l'analyse d'harmonie
+  </div>
+  <div class="lsc" id="mlist"></div>
+  <div class="nbar">
+    <button class="nb" onclick="navTo('sc-swipe',0)"><div class="ni">♠</div>Swipe</button>
+    <button class="nb active" onclick="navTo('sc-matches',1)"><div class="ni">♥</div>Matchs</button>
+    <button class="nb" onclick="navTo('sc-maybe',2)"><div class="ni">~</div>Peut-être</button>
+    <button class="nb" onclick="navTo('sc-settings',3)"><div class="ni">⚙</div>Filtres</button>
+  </div>
+</div>
+
+<!-- MAYBE LIST -->
+<div class="screen" id="sc-maybe">
+  <div class="sbar"><span>9:41</span></div>
+  <div class="hdr"><div style="width:36px"></div><div class="logo">bébé<em>.</em></div><div style="width:36px"></div></div>
+  <div class="sec">Peut-être...</div>
+  <div style="font-size:13px;color:#8B7355;padding:0 16px 10px;flex-shrink:0">Prénoms à rediscuter ensemble</div>
+  <div class="lsc" id="mblist"></div>
+  <div class="nbar">
+    <button class="nb" onclick="navTo('sc-swipe',0)"><div class="ni">♠</div>Swipe</button>
+    <button class="nb" onclick="navTo('sc-matches',1)"><div class="ni">♥</div>Matchs</button>
+    <button class="nb active" onclick="navTo('sc-maybe',2)"><div class="ni">~</div>Peut-être</button>
+    <button class="nb" onclick="navTo('sc-settings',3)"><div class="ni">⚙</div>Filtres</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="screen" id="sc-settings">
+  <div class="sbar"><span>9:41</span></div>
+  <div class="hdr"><div style="width:36px"></div><div class="logo">bébé<em>.</em></div><div style="width:36px"></div></div>
+  <div class="scroll-content" style="padding:0 16px 24px">
+    <div style="font-family:'Fraunces',serif;font-size:20px;color:#2C1810;margin-bottom:14px">Paramètres</div>
+    <div style="font-size:12px;color:#8B7355;margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.8px">Nom de famille</div>
+    <div style="font-size:11px;color:#B8956A;margin-bottom:6px">Pour l'analyse d'harmonie phonétique</div>
+    <input class="inp" id="st-nom" placeholder="Ex: Dupont" oninput="st.nomFamille=this.value.trim()" style="margin-bottom:16px">
+
+    <div id="refused-section" style="display:none;margin-bottom:16px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--bl);font-weight:500;margin-bottom:8px">Prénoms et variantes exclus</div>
+      <div class="refused-chips" id="refused-chips"></div>
+    </div>
+
+    <div style="font-size:12px;color:#8B7355;margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:.8px">Genre</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="bo active" id="sgb" onclick="setSG('both')">Tous</button>
+      <button class="bo" id="sgg" onclick="setSG('girl')">Fille ♀</button>
+      <button class="bo" id="sgbo" onclick="setSG('boy')">Garçon ♂</button>
+    </div>
+
+    <div style="font-size:12px;color:#8B7355;margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:.8px">Options</div>
+    <div class="strow">
+      <div class="sti">
+        <div><div style="font-size:14px;color:#2C1810;font-weight:500">Filtrage phonétique</div><div style="font-size:11px;color:#8B7355;margin-top:2px">Exclure variantes des prénoms refusés</div></div>
+        <button class="tgl on" id="t-phonetic" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+      </div>
+      <div class="sti">
+        <div style="font-size:14px;color:#2C1810">Score d'harmonie sur les matchs</div>
+        <button class="tgl on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+      </div>
+      <div class="sti">
+        <div style="font-size:14px;color:#2C1810">Prénoms courts uniquement (&lt;6 lettres)</div>
+        <button class="tgl off" id="t-short" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:#8B7355;margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:.8px">Pays actifs</div>
+  </div>
+  <div class="cgrid" id="cgrid"></div>
+  <div style="padding:0 16px 8px;flex-shrink:0"><button class="bp" onclick="applySettings()">Appliquer</button></div>
+  <div class="nbar">
+    <button class="nb" onclick="navTo('sc-swipe',0)"><div class="ni">♠</div>Swipe</button>
+    <button class="nb" onclick="navTo('sc-matches',1)"><div class="ni">♥</div>Matchs</button>
+    <button class="nb" onclick="navTo('sc-maybe',2)"><div class="ni">~</div>Peut-être</button>
+    <button class="nb active" onclick="navTo('sc-settings',3)"><div class="ni">⚙</div>Filtres</button>
+  </div>
+</div>
+
+</div><!-- end shell -->
+
+<script>
+const NAMES=[
+  {name:"Éléonore",origin:"Français",meaning:"Lumière brillante",gender:"f",country:"fr",pop:3},
+  {name:"Éléanore",origin:"Français",meaning:"Lumière brillante",gender:"f",country:"fr",pop:2},
+  {name:"Eleonora",origin:"Italien",meaning:"Lumière brillante",gender:"f",country:"it",pop:3},
+  {name:"Aurore",origin:"Latin",meaning:"Déesse de l'aube",gender:"f",country:"fr",pop:4},
+  {name:"Aurora",origin:"Italien",meaning:"Aube dorée",gender:"f",country:"it",pop:4},
+  {name:"Clara",origin:"Latin",meaning:"Claire et lumineuse",gender:"f",country:"fr",pop:5},
+  {name:"Klara",origin:"Nordique",meaning:"Claire et pure",gender:"f",country:"no",pop:3},
+  {name:"Claire",origin:"Français",meaning:"Lumineuse",gender:"f",country:"fr",pop:4},
+  {name:"Iris",origin:"Grec",meaning:"Arc-en-ciel, messagère",gender:"f",country:"fr",pop:3},
+  {name:"Lena",origin:"Nordique",meaning:"Rayon de soleil",gender:"f",country:"no",pop:4},
+  {name:"Léna",origin:"Français",meaning:"Lumière douce",gender:"f",country:"fr",pop:4},
+  {name:"Sofia",origin:"Grec",meaning:"Sagesse",gender:"f",country:"it",pop:5},
+  {name:"Sophie",origin:"Français",meaning:"Sagesse divine",gender:"f",country:"fr",pop:5},
+  {name:"Sophia",origin:"Grec",meaning:"Sagesse et philosophie",gender:"f",country:"fr",pop:5},
+  {name:"Séraphine",origin:"Hébreu",meaning:"Ange de feu céleste",gender:"f",country:"fr",pop:2},
+  {name:"Camille",origin:"Français",meaning:"Servante des dieux",gender:"f",country:"fr",pop:4},
+  {name:"Valentina",origin:"Italien",meaning:"Forte et courageuse",gender:"f",country:"it",pop:4},
+  {name:"Astrid",origin:"Nordique",meaning:"Beauté divine",gender:"f",country:"no",pop:3},
+  {name:"Freya",origin:"Nordique",meaning:"Déesse de l'amour",gender:"f",country:"no",pop:3},
+  {name:"Sakura",origin:"Japonais",meaning:"Fleur de cerisier",gender:"f",country:"jp",pop:3},
+  {name:"Yuki",origin:"Japonais",meaning:"Neige et bonheur",gender:"f",country:"jp",pop:3},
+  {name:"Théa",origin:"Grec",meaning:"Déesse divine",gender:"f",country:"fr",pop:3},
+  {name:"Margaux",origin:"Français",meaning:"Perle précieuse",gender:"f",country:"fr",pop:4},
+  {name:"Léonie",origin:"Latin",meaning:"Lionne courageuse",gender:"f",country:"fr",pop:4},
+  {name:"Amara",origin:"Africain",meaning:"Grâce éternelle",gender:"f",country:"fr",pop:3},
+  {name:"Inès",origin:"Espagnol",meaning:"Pure et sainte",gender:"f",country:"es",pop:4},
+  {name:"Lucia",origin:"Italien",meaning:"Lumière du jour",gender:"f",country:"it",pop:4},
+  {name:"Giulia",origin:"Italien",meaning:"Jeune et vive",gender:"f",country:"it",pop:4},
+  {name:"Ingrid",origin:"Nordique",meaning:"Belle, aimée d'Ing",gender:"f",country:"no",pop:3},
+  {name:"Yoann",origin:"Hébreu",meaning:"Dieu est miséricordieux",gender:"m",country:"fr",pop:3},
+  {name:"Yoan",origin:"Hébreu",meaning:"Dieu est miséricordieux",gender:"m",country:"fr",pop:3},
+  {name:"Yohann",origin:"Hébreu",meaning:"Dieu est miséricordieux",gender:"m",country:"fr",pop:2},
+  {name:"Johann",origin:"Germanique",meaning:"Dieu est miséricordieux",gender:"m",country:"de",pop:3},
+  {name:"Léon",origin:"Latin",meaning:"Lion courageux",gender:"m",country:"fr",pop:4},
+  {name:"Leo",origin:"Latin",meaning:"Lion, roi de la savane",gender:"m",country:"fr",pop:4},
+  {name:"Leonardo",origin:"Italien",meaning:"Lion audacieux",gender:"m",country:"it",pop:3},
+  {name:"Léonard",origin:"Français",meaning:"Fort comme un lion",gender:"m",country:"fr",pop:2},
+  {name:"Théo",origin:"Grec",meaning:"Don de Dieu",gender:"m",country:"fr",pop:5},
+  {name:"Raphaël",origin:"Hébreu",meaning:"Dieu a guéri",gender:"m",country:"fr",pop:5},
+  {name:"Rafael",origin:"Espagnol",meaning:"Dieu a guéri",gender:"m",country:"es",pop:4},
+  {name:"Hugo",origin:"Germanique",meaning:"Intelligence et esprit",gender:"m",country:"fr",pop:5},
+  {name:"Arthur",origin:"Celtique",meaning:"Force royale",gender:"m",country:"fr",pop:5},
+  {name:"Gabriel",origin:"Hébreu",meaning:"Homme de Dieu",gender:"m",country:"fr",pop:4},
+  {name:"Matteo",origin:"Italien",meaning:"Don de Dieu",gender:"m",country:"it",pop:4},
+  {name:"Mathieu",origin:"Français",meaning:"Don de Dieu",gender:"m",country:"fr",pop:4},
+  {name:"Mathis",origin:"Français",meaning:"Don de Dieu",gender:"m",country:"fr",pop:4},
+  {name:"Tristan",origin:"Celtique",meaning:"Tumulte des vagues",gender:"m",country:"fr",pop:3},
+  {name:"Axel",origin:"Nordique",meaning:"Père de la paix",gender:"m",country:"no",pop:4},
+  {name:"Aksel",origin:"Nordique",meaning:"Père de la paix",gender:"m",country:"no",pop:3},
+  {name:"Pablo",origin:"Espagnol",meaning:"Humble et petit",gender:"m",country:"es",pop:4},
+  {name:"Diego",origin:"Espagnol",meaning:"Supplanteur courageux",gender:"m",country:"es",pop:4},
+  {name:"Luca",origin:"Italien",meaning:"Porteur de lumière",gender:"m",country:"it",pop:4},
+  {name:"Lorenzo",origin:"Italien",meaning:"Laurier et victoire",gender:"m",country:"it",pop:4},
+  {name:"Elias",origin:"Nordique",meaning:"Mon Dieu est Yahvé",gender:"m",country:"no",pop:3},
+  {name:"Soren",origin:"Nordique",meaning:"Sévère et sérieux",gender:"m",country:"no",pop:2},
+  {name:"Kenji",origin:"Japonais",meaning:"Fils intelligent",gender:"m",country:"jp",pop:3},
+];
+
+const COUNTRIES=[
+  {code:"fr",flag:"🇫🇷",name:"Français"},
+  {code:"it",flag:"🇮🇹",name:"Italien"},
+  {code:"no",flag:"🇸🇪",name:"Nordique"},
+  {code:"jp",flag:"🇯🇵",name:"Japonais"},
+  {code:"es",flag:"🇪🇸",name:"Espagnol"},
+  {code:"de",flag:"🇩🇪",name:"Allemand"},
+];
+
+let st={
+  name1:"Marc",name2:"Sophie",nomFamille:"",
+  gender:"both",activeC:new Set(["fr","it","no","jp","es","de"]),
+  filtered:[],idx:0,history:[],
+  matches:[],maybes:[],matchCount:0,
+  partnerLiked:[],
+  refused:new Set(),refGroups:{},skipped:0,
+};
+
+/* PHONETIC ENGINE */
+function norm(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z]/g,'');}
+function syllables(s){return Math.max(1,(norm(s).match(/[aeiouy]+/g)||[]).length);}
+function lastVowel(s){const m=norm(s).match(/[aeiouy]+(?=[^aeiouy]*$)/);return m?m[0]:'';}
+function firstChar(s){return norm(s)[0]||'';}
+function lastChar(s){const n=norm(s);return n[n.length-1]||'';}
+
+function phoneticKey(name){
+  let s=norm(name);
+  [[/ph/g,'f'],[/eau|aux|au/g,'o'],[/ein|ain|aim/g,'in'],[/th/g,'t'],[/ck/g,'k'],[/qu/g,'k'],[/yoh|yoa|joh/g,'yo'],[/w/g,'v'],[/([bcdfghjklmnpqrstvwxz])\1+/g,'$1'],[/e$/g,''],[/s$/g,'']].forEach(([a,b])=>s=s.replace(a,b));
+  return s;
+}
+function soundSim(a,b){
+  const ka=phoneticKey(a),kb=phoneticKey(b);
+  if(ka===kb)return 1;
+  const m=ka.length,n=kb.length;
+  if(!m||!n)return 0;
+  const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0));
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)dp[i][j]=ka[i-1]===kb[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return Math.min(1,(1-dp[m][n]/Math.max(m,n))+(norm(a).slice(0,2)===norm(b).slice(0,2)?0.15:0));
+}
+function isPhoneticOn(){return document.getElementById('t-phonetic').classList.contains('on');}
+function isRefused(name){
+  if(st.refused.has(name))return true;
+  if(!isPhoneticOn())return false;
+  for(const[,vs]of Object.entries(st.refGroups))if(vs.includes(name))return true;
+  return false;
+}
+
+function harmonyScore(prenom,nom){
+  if(!nom||!prenom)return null;
+  const sp=syllables(prenom),sf=syllables(nom),tot=sp+sf;
+  let rythme=tot<=3?55:tot<=5?92:tot<=7?82:tot<=9?68:45;
+  if(sp/Math.max(sf,1)<0.4||sp/Math.max(sf,1)>2.8)rythme=Math.max(rythme-12,20);
+  const lp=lastVowel(prenom),lf=lastVowel(nom);
+  let rime=(!lp||!lf)?70:(lp===lf?(sp!==sf?55:35):90);
+  const vowels=['a','e','i','o','u','y'];
+  const pev=vowels.includes(lastChar(prenom)),fsv=vowels.includes(firstChar(nom));
+  let elision=(pev&&fsv)?55:(lastChar(prenom)===firstChar(nom)?62:88);
+  const full=norm(prenom)+norm(nom);
+  const clust=(full.match(/[bcdfghjklmnpqrstvwxz]{3,}/g)||[]).length;
+  const vr=(full.match(/[aeiouy]/g)||[]).length/Math.max(full.length,1);
+  let euph=Math.max(30,Math.min(100,80-clust*14-(vr<0.3?14:0)-(vr>0.55?10:0)));
+  let init=firstChar(prenom)===firstChar(nom)?35:88;
+  const total=Math.round(rythme*.3+rime*.25+elision*.2+euph*.15+init*.1);
+  return{total,criteria:[
+    {label:"Rythme syllabique",score:rythme},
+    {label:"Distinction finale",score:rime},
+    {label:"Enchaînement",score:elision},
+    {label:"Euphonie",score:euph},
+    {label:"Initiales",score:init},
+  ]};
+}
+
+/* NAV */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function navTo(id,i){
+  goTo(id);
+  for(let j=0;j<4;j++){const b=document.getElementById('nv'+j);if(b)b.classList.toggle('active',j===i);}
+  if(id==='sc-matches')renderMatches();
+  if(id==='sc-maybe')renderMaybes();
+  if(id==='sc-settings'){
+    document.getElementById('st-nom').value=st.nomFamille;
+    renderRefused();
+  }
+}
+function setChip(el,c){document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');}
+function setG(g){st.gender=g;['gb','gg','gbo'].forEach(id=>document.getElementById(id)?.classList.remove('active'));document.getElementById(g==='both'?'gb':g==='girl'?'gg':'gbo')?.classList.add('active');}
+function setSG(g){st.gender=g;['sgb','sgg','sgbo'].forEach(id=>document.getElementById(id)?.classList.remove('active'));document.getElementById(g==='both'?'sgb':g==='girl'?'sgg':'sgbo')?.classList.add('active');}
+
+/* SESSION */
+function quickDemo(){st.name1='Marc';st.name2='Sophie';st.nomFamille='';initSwipe();goTo('sc-swipe');}
+function startSession(){
+  st.name1=document.getElementById('in-n1').value.trim()||'Marc';
+  st.name2=document.getElementById('in-n2').value.trim()||'Sophie';
+  st.nomFamille=document.getElementById('in-nom').value.trim();
+  initSwipe();goTo('sc-swipe');
+}
+function applySettings(){
+  st.nomFamille=document.getElementById('st-nom').value.trim();
+  initSwipe();navTo('sc-swipe',0);
+}
+function initSwipe(){
+  let pool=NAMES.filter(n=>st.activeC.has(n.country));
+  if(st.gender==='girl')pool=pool.filter(n=>n.gender==='f');
+  if(st.gender==='boy')pool=pool.filter(n=>n.gender==='m');
+  pool=pool.sort(()=>Math.random()-.5);
+  st.filtered=pool;st.idx=0;st.history=[];st.skipped=0;
+  st.partnerLiked=pool.map(()=>Math.random()>.5);
+  const i1=(st.name1[0]||'M').toUpperCase(),i2=(st.name2[0]||'S').toUpperCase();
+  ['av-you','mav1'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=i1;});
+  ['av-par','mav2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=i2;});
+  document.getElementById('hdr-p').textContent=st.name2;
+  document.getElementById('p-nb').textContent=st.name2+' est connectée';
+  document.getElementById('mn1').textContent=st.name1;
+  document.getElementById('mn2').textContent=st.name2;
+  advancePast();
+}
+
+/* CARD */
+function advancePast(){
+  while(st.idx<st.filtered.length&&isRefused(st.filtered[st.idx].name)){st.skipped++;st.idx++;}
+  updateCard();updateProg();
+}
+function updateCard(){
+  const card=document.getElementById('c1');
+  const n=st.filtered[st.idx];
+  if(!n){
+    card.style.cursor='default';
+    card.innerHTML='<div style="text-align:center;padding:28px"><div style="font-family:Fraunces,serif;font-size:28px;color:#2C1810;margin-bottom:12px">Terminé !</div><div style="color:#8B7355;font-size:14px;line-height:1.7">'+st.matchCount+' match'+(st.matchCount>1?'s':'')+' trouvé'+(st.matchCount>1?'s':'')+'.<br>'+(st.skipped>0?st.skipped+' variante'+(st.skipped>1?'s':'')+' phonétique'+(st.skipped>1?'s':'')+' ignorée'+(st.skipped>1?'s':'')+'.<br>':'')+'<br><button onclick="initSwipe()" style="margin-top:12px;background:#2C1810;color:#FDF8F3;border:none;border-radius:20px;padding:10px 24px;font-size:14px;cursor:pointer;font-family:DM Sans,sans-serif">Recommencer</button></div></div>';
+    return;
+  }
+  card.style.cursor='grab';
+  document.getElementById('colbl').textContent=n.origin+' · '+(n.gender==='f'?'Féminin':'Masculin');
+  document.getElementById('cnam').textContent=n.name;
+  document.getElementById('cmng').textContent=n.meaning;
+  const gc=n.gender==='f'?'tf':'tm',gl=n.gender==='f'?'♀ Féminin':'♂ Masculin';
+  const pop='★'.repeat(n.pop)+'☆'.repeat(5-n.pop);
+  document.getElementById('ctags').innerHTML='<div class="tag '+gc+'">'+gl+'</div><div class="tag tc">'+n.origin+'</div><div class="tag tp">'+pop+'</div>';
+  const ph=document.getElementById('cph');
+  let hint=false;
+  for(const m of st.matches){if(soundSim(n.name,m.name)>=.72&&n.name!==m.name){ph.textContent='Sonne comme "'+m.name+'" — que vous aimez';ph.style.display='block';hint=true;break;}}
+  if(!hint)ph.style.display='none';
+  ['soui','snon','smb'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.opacity='0';});
+}
+function updateProg(){
+  const tot=st.filtered.length,shown=Math.max(1,tot-st.skipped),done=Math.max(0,st.idx-st.skipped);
+  document.getElementById('pf').style.width=Math.round(done/shown*100)+'%';
+  document.getElementById('plb').textContent=Math.min(done+1,shown)+'/'+shown;
+  document.getElementById('sklb').textContent=st.skipped>0?st.skipped+' ignoré'+(st.skipped>1?'s':''):'';
+  document.getElementById('mpill').textContent=st.matchCount+(st.matchCount>1?' matchs':' match');
+}
+
+/* SWIPE */
+function doSwipe(dir){
+  if(st.idx>=st.filtered.length)return;
+  const n=st.filtered[st.idx];
+  const card=document.getElementById('c1');
+  st.history.push({n,dir,idx:st.idx,skipped:st.skipped});
+  if(dir==='nope'){
+    st.refused.add(n.name);
+    st.refGroups[n.name]=NAMES.filter(x=>x.name!==n.name&&soundSim(n.name,x.name)>=.72).map(x=>x.name);
+    card.classList.add('gl');
+    setTimeout(()=>{card.classList.remove('gl');st.idx++;advancePast();},350);
+  } else if(dir==='like'){
+    card.classList.add('gr');
+    if(st.partnerLiked[st.idx]){
+      st.matches.push(n);st.matchCount++;
+      setTimeout(()=>{card.classList.remove('gr');st.idx++;advancePast();showMatch(n);},320);
+      return;
+    }
+    setTimeout(()=>{card.classList.remove('gr');st.idx++;advancePast();},350);
+  } else {
+    card.classList.add('gm');st.maybes.push(n);
+    setTimeout(()=>{card.classList.remove('gm');st.idx++;advancePast();},350);
+  }
+}
+function doUndo(){
+  if(!st.history.length)return;
+  const last=st.history.pop();
+  if(last.dir==='nope'){st.refused.delete(last.n.name);delete st.refGroups[last.n.name];}
+  if(last.dir==='maybe')st.maybes=st.maybes.filter(x=>x.name!==last.n.name);
+  if(last.dir==='like'&&st.matches.find(x=>x.name===last.n.name)){st.matches=st.matches.filter(x=>x.name!==last.n.name);st.matchCount=Math.max(0,st.matchCount-1);}
+  st.idx=last.idx;st.skipped=last.skipped;
+  updateCard();updateProg();
+  const c=document.getElementById('c1');c.style.transform='scale(1.04)';setTimeout(()=>c.style.transform='',200);
+}
+
+/* MATCH ANIM */
+function showMatch(n){
+  document.getElementById('man').textContent=n.name;
+  const hcard=document.getElementById('match-hcard');
+  if(st.nomFamille){
+    hcard.style.display='block';
+    const h=harmonyScore(n.name,st.nomFamille);
+    document.getElementById('mhc-title').textContent=n.name+' '+st.nomFamille;
+    document.getElementById('hfullname').textContent=n.name+' '+st.nomFamille;
+    const col=h.total>=75?'#5DCAA5':h.total>=50?'#EF9F27':'#E24B4A';
+    document.getElementById('hverdict').textContent=h.total>=75?'Excellente harmonie':h.total>=55?'Bonne combinaison':'Attention phonétique';
+    document.getElementById('hscore-num').textContent=h.total;
+    const arc=document.getElementById('harc');
+    arc.setAttribute('stroke',col);
+    arc.setAttribute('stroke-dashoffset',138-(138*h.total/100));
+    document.getElementById('hcrit').innerHTML=h.criteria.map(c=>{
+      const fc=c.score>=75?'#5DCAA5':c.score>=50?'#EF9F27':'#E24B4A';
+      return'<div class="hc-row"><span class="hc-label">'+c.label+'</span><div class="hc-bar"><div class="hc-fill" style="width:'+c.score+'%;background:'+fc+'"></div></div><span class="hc-val" style="color:'+fc+'">'+c.score+'</span></div>';
+    }).join('');
+  } else {hcard.style.display='none';}
+  goTo('sc-match');
+  setTimeout(()=>{if(document.querySelector('#sc-match.active'))goTo('sc-swipe');},5500);
+}
+
+/* MATCH LIST */
+function renderMatches(){
+  const list=document.getElementById('mlist');
+  const rem=document.getElementById('nom-reminder');
+  document.getElementById('mtitle').textContent='Vos matchs ('+st.matches.length+')';
+  rem.style.display=(!st.nomFamille&&st.matches.length>0)?'block':'none';
+  if(!st.matches.length){list.innerHTML='<div class="es"><div style="font-size:44px">♥</div><div style="font-family:Fraunces,serif;font-size:20px;color:#2C1810">Pas encore de match</div><div style="font-size:13px;color:#8B7355;line-height:1.5">Swipez pour trouver vos<br>prénoms communs</div></div>';return;}
+  list.innerHTML=st.matches.map(n=>{
+    const h=st.nomFamille?harmonyScore(n.name,st.nomFamille):null;
+    const gl=n.gender==='f'?'♀':'♂';
+    let harmHtml='';
+    if(h){
+      const col=h.total>=75?'#0F6E56':h.total>=55?'#854F0B':'#A32D2D';
+      const bg=h.total>=75?'#E1F5EE':h.total>=55?'#FAEEDA':'#FCEBEB';
+      const verd=h.total>=75?'Excellente harmonie':h.total>=55?'Bonne combinaison':'Attention';
+      harmHtml='<div class="mitem-harmony"><div class="mh-title"><span>'+n.name+' '+st.nomFamille+'</span><span class="mh-score-badge" style="background:'+bg+';color:'+col+'">'+h.total+'/100 · '+verd+'</span></div><div class="mh-rows">'+h.criteria.map(c=>{const fc=c.score>=75?'#5DCAA5':c.score>=50?'#EF9F27':'#E24B4A';return'<div class="mh-row"><span class="mh-rlabel">'+c.label+'</span><div class="mh-rbar"><div class="mh-rfill" style="width:'+c.score+'%;background:'+fc+'"></div></div><span class="mh-rval" style="color:'+fc+'">'+c.score+'</span></div>';}).join('')+'</div></div>';
+    }
+    return'<div class="mitem"><div class="mitem-top"><div><div class="mitem-name">'+n.name+'</div><div class="mitem-meta">'+gl+' · '+n.origin+'</div></div><div class="mheart">♥</div></div>'+harmHtml+'</div>';
+  }).join('');
+}
+
+/* MAYBE LIST */
+function renderMaybes(){
+  const list=document.getElementById('mblist');
+  if(!st.maybes.length){list.innerHTML='<div class="es"><div style="font-size:44px">~</div><div style="font-family:Fraunces,serif;font-size:20px;color:#2C1810">Aucun prénom en attente</div><div style="font-size:13px;color:#8B7355">Utilisez ~ pour mettre de côté</div></div>';return;}
+  list.innerHTML=st.maybes.map((n,i)=>'<div class="maybe-item"><div style="flex:1"><div style="font-family:Fraunces,serif;font-size:20px;color:#2C1810">'+n.name+'</div><div style="font-size:11px;color:#8B7355">'+n.origin+'</div></div><div style="display:flex;gap:6px"><button class="mnb lk" onclick="promMaybe('+i+',\'like\')">♥</button><button class="mnb np" onclick="promMaybe('+i+',\'nope\')">✕</button></div></div>').join('');
+}
+function promMaybe(i,dir){
+  const n=st.maybes[i];st.maybes.splice(i,1);
+  if(dir==='like'){const pi=st.filtered.findIndex(x=>x.name===n.name);if(pi>=0&&st.partnerLiked[pi]){st.matches.push(n);st.matchCount++;showMatch(n);}}
+  renderMaybes();
+}
+
+/* REFUSED */
+function renderRefused(){
+  const sec=document.getElementById('refused-section');
+  const chips=document.getElementById('refused-chips');
+  if(!st.refused.size){sec.style.display='none';return;}
+  sec.style.display='block';
+  chips.innerHTML=[...st.refused].map(name=>{
+    const vs=st.refGroups[name]||[];
+    const lbl=vs.length>0?name+' +'+vs.length+' variante'+(vs.length>1?'s':''):name;
+    return'<div class="rchip">'+lbl+'<span onclick="unreject(\''+name+'\')" style="cursor:pointer;font-size:16px;color:#E24B4A;font-weight:500;margin-left:2px">✕</span></div>';
+  }).join('');
+}
+function unreject(name){
+  st.refused.delete(name);delete st.refGroups[name];
+  renderRefused();st.skipped=0;st.idx=0;advancePast();
+}
+
+/* COUNTRY GRID */
+function buildGrid(){
+  const g=document.getElementById('cgrid');g.innerHTML='';
+  COUNTRIES.forEach(c=>{
+    const a=st.activeC.has(c.code);
+    const d=document.createElement('div');d.className='ccard'+(a?' active':'');
+    d.innerHTML='<div style="font-size:22px">'+c.flag+'</div><div><div style="font-size:13px;font-weight:500;color:#2C1810">'+c.name+'</div><div style="font-size:11px;color:#8B7355">'+NAMES.filter(n=>n.country===c.code).length+' prénoms</div></div>';
+    d.onclick=()=>{if(st.activeC.has(c.code)){if(st.activeC.size>1){st.activeC.delete(c.code);d.classList.remove('active');}}else{st.activeC.add(c.code);d.classList.add('active');}};
+    g.appendChild(d);
+  });
+}
+
+/* DRAG */
+let drag={on:false,sx:0,sy:0,cx:0,cy:0};
+const C=()=>document.getElementById('c1');
+function ds(x,y){
+  if(st.idx>=st.filtered.length)return;
+  drag.on=true;drag.sx=x;drag.sy=y;drag.cx=0;drag.cy=0;
+  C().style.transition='none';C().style.cursor='grabbing';
+}
+function dm(x,y){
+  if(!drag.on)return;
+  drag.cx=x-drag.sx;drag.cy=y-drag.sy;
+  C().style.transform='translateX('+drag.cx+'px) translateY('+(drag.cy*.2)+'px) rotate('+(drag.cx*.07)+'deg)';
+  const s=document.getElementById('soui'),n=document.getElementById('snon');
+  if(drag.cx>40){s.style.opacity=Math.min((drag.cx-40)/60,1);n.style.opacity='0';}
+  else if(drag.cx<-40){n.style.opacity=Math.min((-drag.cx-40)/60,1);s.style.opacity='0';}
+  else{s.style.opacity='0';n.style.opacity='0';}
+}
+function de(){
+  if(!drag.on)return;drag.on=false;
+  C().style.transition='';C().style.cursor='grab';
+  if(drag.cx>85)doSwipe('like');
+  else if(drag.cx<-85)doSwipe('nope');
+  else{C().style.transform='';['soui','snon','smb'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.opacity='0';});}
+}
+const card1=document.getElementById('c1');
+card1.addEventListener('mousedown',e=>{e.preventDefault();ds(e.clientX,e.clientY);});
+document.addEventListener('mousemove',e=>{if(drag.on)dm(e.clientX,e.clientY);});
+document.addEventListener('mouseup',de);
+card1.addEventListener('touchstart',e=>{ds(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+card1.addEventListener('touchmove',e=>{if(drag.on){e.preventDefault();dm(e.touches[0].clientX,e.touches[0].clientY);}},{passive:false});
+card1.addEventListener('touchend',de);
+
+/* CLOCK */
+function updateClock(){
+  const now=new Date();
+  const t=now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+  document.querySelectorAll('.sbar span:first-child').forEach(e=>e.textContent=t);
+}
+updateClock();setInterval(updateClock,30000);
+
+buildGrid();
+initSwipe();
+</script>
+</body>
+</html>
